@@ -1,5 +1,5 @@
 [package]
-name = "aes-siv-crypto"
+name = "cli-crypto-tool"
 version = "0.1.0"
 edition = "2021"
 

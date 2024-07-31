@@ -1,13 +1,10 @@
 use aes_siv::{
     aead::rand_core::RngCore,
     aead::{Aead, KeyInit, OsRng},
-    Aes256SivAead,
-    Key,
-    Nonce, // Or `Aes128SivAead`
+    Aes256SivAead, Key, Nonce,
 };
 use clap::{Parser, ValueEnum};
-use std::fs;
-use std::path::PathBuf;
+use std::{fs, path::PathBuf};
 
 fn pad_password(password: String) -> Vec<u8> {
     let mut pass_vec = password.as_bytes().to_vec();
@@ -63,7 +60,7 @@ fn main() {
                 .encrypt(nonce, &input[..])
                 .expect("Encryption failed");
             let _ = std::io::copy(&mut &ciphertext[..], &mut output);
-            let _ = fs::write(cli.output, output);
+            fs::write(cli.output, output).expect("Failed to write output file");
         }
         Mode::Decrypt => {
             // First 16 bytes are the used nonce
@@ -72,7 +69,7 @@ fn main() {
             let output = cipher
                 .decrypt(nonce, &input[..])
                 .expect("Decryption failed");
-            let _ = fs::write(cli.output, output);
+            fs::write(cli.output, output).expect("Failed to write output file");
         }
     }
 }
